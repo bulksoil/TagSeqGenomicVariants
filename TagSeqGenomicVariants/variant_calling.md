@@ -40,6 +40,9 @@ Next we will align the reads for each fastq file to the col genome.
 
 ```
 for sample in $(cat samples); \
-do echo "On sample: $sample"; fq_trim.py -i *"$sample"* -n 25 -o "$sample"_trim.fq;
+do echo "On sample: $sample"; \
+bowtie2 -x /Users/joeya/JOE/reference/at -U "$sample"_trim.fq \
+| samtools view -bS - \
+| samtools sort - > "$sample".bam;
 done;
 ```
