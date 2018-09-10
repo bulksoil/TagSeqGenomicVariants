@@ -10,7 +10,7 @@ Because the sequencing effort is limited to the 3' end of the transcripts in tag
 ## Data Processing
 
 ### Trimming sequencing results
-Tag-seq reads originate mainly in the 3' UTR of transcripts, therefore many of the reads contain the polyA tail. This part needs to be trimmed off. I have written a python script `fq_trim.py` that will do this. But before trimming, let's get everything in order so that we can automate the process.
+Tag-seq reads originate mainly in the 3' UTR of transcripts, therefore many of the reads contain the polyA tail. This part needs to be trimmed off. I have written a python script `fq_trim.py` that will do this. Not only that, but with tag-seq data, it is important to trim the first 12 bases of the reads because they originate from random primers and likely have some mismatched bases from the reference genome. But before trimming, let's get everything in order so that we can automate the process.
 
 I took some time to get a file together with unique identifying information for each fastq file so that I could write a quick shell script to automate some of the stuff. For example:
 
@@ -23,11 +23,11 @@ Next we can loop over each file to trim it accordingly. Note that the the `-n` o
 
 ```
 for sample in $(cat samples); \
-do echo "On sample: $sample"; fq_trim.py -i *"$sample"* -n 25 -o "$sample"_trim.fq;
+do echo "On sample: $sample"; fq_trim.py -i *"$sample"* -n 15 -o "$sample"_trim.fq;
 done;
 ```
 ### Aligning reads
-Now that everything is trimmed down to remove the polyA tail we can align the reads to the genome. I think it is best to call SNPs verse one well-annotated genome, so in this case I am using the TAIR10 Columbia reference genome.
+Now that everything is trimmed down to remove the polyA tail we can align the reads to the genome. I think it is best to call SNPs verse one well-annotated genome, so in this case I am using the TAIR10 Columbia reference genome. We will do the aligning in the splice-aware manner because the reads can cover a few exons as well as the 3' UTR.
 
 I'll align to the col genome using the Bowtie2 aligner. Before aligning, bowtie2 needs to index the reference genome. You can do this with the below code.
 ```
@@ -41,8 +41,9 @@ Next we will align the reads for each fastq file to the col genome.
 ```
 for sample in $(cat samples); \
 do echo "On sample: $sample"; \
-bowtie2 -x /Users/joeya/JOE/reference/at -U "$sample"_trim.fq \
-| samtools view -bS - \
-| samtools sort - > "$sample".bam;
+tophat -o "$sample"_th /Users/joeya/JOE/reference/at "$sample"_trim.fq; \
 done;
 ```
+`bowtie2` is actually aligning the reads to the reference genome. `samtools view` is converting the outputted sam format to bam. Finally, the `samtools sort` function is sorting the bam file which is necessary for downstream processes. This process could be sped up quite a bit by using more than one processors. 
+
+
