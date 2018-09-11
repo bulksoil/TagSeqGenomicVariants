@@ -3,6 +3,8 @@
 ## Introduction and reasoning
 More and more, 3' tag sequencing (tag-seq) is being used as an alternative to traditional RNA sequencing to asses the transcriptional profile of samples. Tag-seq focusses the sequencing effort to the 3' end of a transcript, and in doing so requires less coverage to quantitatively determine expression levels for a gene. This means that one can expend less sequencing effort per sample to achieve similar concusions as traditional RNAseq. 
 
+![tag seq workflow](img/tagseq.png)
+
 One thing that biologists interested in hybridization and heterosis are interested in is assessing the contribution of each parent to the overall transcriptional state of the offspring organism. To do this with tranditional RNAseq, one would find meaninful SNPs that define an allele, then map the reads back to the genomes and figure out how many reads map to these alleles that define the parental genomes. 
 
 Because the sequencing effort is limited to the 3' end of the transcripts in tag-seq, I want to see here if it is feasible to use tag-seq to define parent of origin expression. In this example, I use tag-seq data from the parents of the Arabidopsis thaliana MAGIC lines to call variants.
@@ -29,14 +31,12 @@ done;
 ### Aligning reads
 Now that everything is trimmed down to remove the polyA tail we can align the reads to the genome. I think it is best to call SNPs verse one well-annotated genome, so in this case I am using the TAIR10 Columbia reference genome. We will do the aligning in the splice-aware manner because the reads can cover a few exons as well as the 3' UTR.
 
-I'll align to the col genome using the Bowtie2 aligner. Before aligning, bowtie2 needs to index the reference genome. You can do this with the below code.
+I'll align to the col genome using Bowtie2 + Tophat. Before aligning, bowtie2 needs to index the reference genome. You can do this with the below code.
 ```
 bowtie2 index TAIR10_chr_all.fas at
 ```
 
-TAIR10_chr_all.fas is the input fasta file and `at` is the prefix that will be put on the created index files.
-
-Next we will align the reads for each fastq file to the col genome.
+`TAIR10_chr_all.fas` is the input fasta file and `at` is the prefix that will be put on the created index files. Next we will align the reads for each fastq file to the col genome.
 
 ```
 for sample in $(cat samples); \
@@ -44,6 +44,16 @@ do echo "On sample: $sample"; \
 tophat -o "$sample"_th /Users/joeya/JOE/reference/at "$sample"_trim.fq; \
 done;
 ```
-`bowtie2` is actually aligning the reads to the reference genome. `samtools view` is converting the outputted sam format to bam. Finally, the `samtools sort` function is sorting the bam file which is necessary for downstream processes. This process could be sped up quite a bit by using more than one processors. 
+This will output all kinds of stuff, but we are mainly interested in is the `accepted_hits.bam` it spits out. This file needs to be sorted before continuing.
 
+```
+for sample in $(cat samples); \
+do echo "On sample: $sample"; \
+samtools sort "$sample"_th/accepted_hits.bam > "$sample"_sorted.bam; \
+done;
+```
 
+Now we are ready to call variants
+
+### Calling variants
+We will use the mpileup command out of bcftools to 
