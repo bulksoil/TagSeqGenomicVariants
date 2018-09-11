@@ -56,4 +56,31 @@ done;
 Now we are ready to call variants
 
 ### Calling variants
-We will use the mpileup command out of bcftools to 
+We will use the mpileup command out of bcftools to call variants in the alignments compared to the columbia reference genome.
+
+```
+for sample in $(cat samples); \
+do echo "On sample: $sample"; \
+bcftools mpileup -Ou -f ~/JOE/Reference/at.fa "$sample"_sorted.bam | bcftools call -mv -o "$sample"_calls.bcf; \
+done;
+```
+
+Here we are looping through the sorted bam file, running them through the `mpileup` program. What mpileup does is it goes through your the alignment file (.bam) and stacks up each aligned base to the reference genome. For instance at position 1119587 on Chromosome one there may be 8 reads that share that space with basecalls of AAATAAAA. If you do this over every place where a read aligned in the genome, you get a pileup file.
+
+We then pipe this into the bcftools `call` program which will make consesus base calls at each position - and assign a quality value to each. We can later use these quality assignments to filter for high confidence polymorphisms.
+
+```
+for sample in $(cat samples); \
+do echo "On sample: $sample"; \
+bcftools view -i '%QUAL>=80' -o "$sample"_hq_calls.vcf "$sample"_calls.bcf; \
+done;
+```
+
+
+```
+echo -e "SampleID\tDepth\tVariants";\
+for sample in $(cat samples); \
+do echo -e "$sample\t" `awk '{s++}END{print s/4}' "$sample"_trim.fq` "\t" `grep -v "^#" "HQ_CALLS/$sample"_hq_calls.vcf | wc -l`; \
+done;
+```
+
