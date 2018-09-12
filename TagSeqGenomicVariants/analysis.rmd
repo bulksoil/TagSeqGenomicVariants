@@ -1,0 +1,37 @@
+---
+title: "MAGIC Parents SNP Analysis"
+output: html_notebook
+author: "Joe Edwards"
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+setwd("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/")
+```
+
+```{r}
+samples <- scan("../RAWDATA/samples", what = "character")
+vcf_files <- dir("../SNP_CALLING/HQ_CALLS/", pattern = '*.vcf', full.names = T)
+```
+
+```{r}
+vcf_read <- function(data){
+  f <- readr::read_tsv(data, comment = "##") %>% 
+    mutate(SampleID = gsub("\\.vcf", "", data)) %>% 
+    rename("Chr" = !!names(.[1]))
+  return(f[,-10])
+}
+
+AT_DATA <- vcf_files %>% 
+  map(vcf_read) %>% 
+  reduce(rbind) %>% 
+  mutate(SampleID = gsub(".*Pool[0-9]_", "", SampleID), SampleID = gsub("_hq_calls", "", SampleID))
+```
+
+```{r}
+AT_DATA %>% head()
+```
+

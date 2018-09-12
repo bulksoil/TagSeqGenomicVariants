@@ -12,7 +12,9 @@ Because the sequencing effort is limited to the 3' end of the transcripts in tag
 ## Data Processing
 
 ### Trimming sequencing results
-Tag-seq reads originate mainly in the 3' UTR of transcripts, therefore many of the reads contain the polyA tail. This part needs to be trimmed off. I have written a python script `fq_trim.py` that will do this. Not only that, but with tag-seq data, it is important to trim the first 12 bases of the reads because they originate from random primers and likely have some mismatched bases from the reference genome. But before trimming, let's get everything in order so that we can automate the process.
+Tag-seq reads originate mainly in the 3' UTR of transcripts, therefore many of the reads contain the polyA tail. This part needs to be trimmed off. I have written a python script `fq_trim.py` that will do this. Not only that, but with tag-seq data, it is important to trim the first 12 bases of the reads because they originate from random primers and likely have some mismatched bases from the reference genome. Some processing tips can be found [here](http://dnatech.genomecenter.ucdavis.edu/wp-content/uploads/2017/09/Quant-Seq-FWD-data-analysis-recommendations-Tag-Seq.pdf).
+
+But before trimming, let's get everything in order so that we can automate the process.
 
 I took some time to get a file together with unique identifying information for each fastq file so that I could write a quick shell script to automate some of the stuff. For example:
 
@@ -75,7 +77,6 @@ do echo "On sample: $sample"; \
 bcftools view -i '%QUAL>=80' -o "$sample"_hq_calls.vcf "$sample"_calls.bcf; \
 done;
 ```
-
 
 ```
 echo -e "SampleID\tDepth\tVariants";\
