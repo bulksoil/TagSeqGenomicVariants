@@ -15,13 +15,15 @@ setwd("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/")
 ```{r}
 samples <- scan("../RAWDATA/samples", what = "character")
 vcf_files <- dir("../SNP_CALLING/HQ_CALLS/", pattern = '*.vcf', full.names = T)
+gff <- read.table("~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff", header = F)
 ```
 
 ```{r}
 vcf_read <- function(data){
   f <- readr::read_tsv(data, comment = "##") %>% 
     mutate(SampleID = gsub("\\.vcf", "", data)) %>% 
-    rename("Chr" = !!names(.[1]))
+    rename("Chr" = !!names(.[1])) %>% 
+    mutate(Chr = paste("Chr", Chr, sep = ""))
   return(f[,-10])
 }
 
@@ -32,6 +34,6 @@ AT_DATA <- vcf_files %>%
 ```
 
 ```{r}
-AT_DATA %>% head()
+spread_vcf 
 ```
 
