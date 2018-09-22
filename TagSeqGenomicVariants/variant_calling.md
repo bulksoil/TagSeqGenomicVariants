@@ -85,3 +85,13 @@ do echo -e "$sample\t" `awk '{s++}END{print s/4}' "$sample"_trim.fq` "\t" `grep 
 done;
 ```
 
+This ultimately gives us the position of each snp compared to the Columbia genome, but we do not have any idea what the geneIDs are for the SNPs. So to figure this out, let's run this script over the generated files.
+
+```
+for sample in $(cat samples); \
+do echo "On sample: $sample"; \
+snp_to_gene.py -i "$sample"_hq_calls.vcf -g ~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff -o "$sample"_calls_with_geneid.vcf; \
+done;
+```
+
+
