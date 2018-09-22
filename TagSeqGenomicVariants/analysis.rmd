@@ -6,6 +6,7 @@ author: "Joe Edwards"
 
 ```{r}
 library(tidyverse)
+library(fuzzyjoin)
 ```
 
 ```{r}
@@ -15,7 +16,8 @@ setwd("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/")
 ```{r}
 samples <- scan("../RAWDATA/samples", what = "character")
 vcf_files <- dir("../SNP_CALLING/HQ_CALLS/", pattern = '*.vcf', full.names = T)
-gff <- read.table("~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff", header = F)
+gff <- read.table("~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff", header = F) %>% 
+  filter(V3 == "mRNA")
 ```
 
 ```{r}
@@ -34,6 +36,11 @@ AT_DATA <- vcf_files %>%
 ```
 
 ```{r}
-spread_vcf 
+gene_snps <- fuzzy_left_join(AT_DATA, gff,
+                             by = c("Chr" = "V1",
+                                    "POS" = "V4",
+                                    "POS" = "V5"),
+                             match_fun = list(`==`, `>=`, `<=`))
+  
 ```
 

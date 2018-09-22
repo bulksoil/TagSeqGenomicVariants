@@ -176,28 +176,30 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(tidyverse)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShmdXp6eWpvaW4pXG5cbmBgYCJ9 -->
+<pre class="r"><code>library(fuzzyjoin)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXHUwMDFiWzM3beKUgOKUgCBcdTAwMWJbMW1BdHRhY2hpbmcgcGFja2FnZXNcdTAwMWJbMjJtIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2UgMS4yLjEg4pSA4pSAXHUwMDFiWzM5bVxuXHUwMDFiWzM3bVx1MDAxYlszMm3inJRcdTAwMWJbMzdtIFx1MDAxYlszNG1nZ3Bsb3QyXHUwMDFiWzM3bSAyLjIuMSAgICAgXHUwMDFiWzMybeKclFx1MDAxYlszN20gXHUwMDFiWzM0bXB1cnJyICBcdTAwMWJbMzdtIDAuMi40XG5cdTAwMWJbMzJt4pyUXHUwMDFiWzM3bSBcdTAwMWJbMzRtdGliYmxlIFx1MDAxYlszN20gMS4zLjQgICAgIFx1MDAxYlszMm3inJRcdTAwMWJbMzdtIFx1MDAxYlszNG1kcGx5ciAgXHUwMDFiWzM3bSAwLjcuNFxuXHUwMDFiWzMybeKclFx1MDAxYlszN20gXHUwMDFiWzM0bXRpZHlyICBcdTAwMWJbMzdtIDAuNy4yICAgICBcdTAwMWJbMzJt4pyUXHUwMDFiWzM3bSBcdTAwMWJbMzRtc3RyaW5nclx1MDAxYlszN20gMS4yLjBcblx1MDAxYlszMm3inJRcdTAwMWJbMzdtIFx1MDAxYlszNG1yZWFkciAgXHUwMDFiWzM3bSAxLjEuMSAgICAgXHUwMDFiWzMybeKclFx1MDAxYlszN20gXHUwMDFiWzM0bWZvcmNhdHNcdTAwMWJbMzdtIDAuMi4wXHUwMDFiWzM5bVxuXHUwMDFiWzM3beKUgOKUgCBcdTAwMWJbMW1Db25mbGljdHNcdTAwMWJbMjJtIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG5cdTAwMWJbMzFt4pyWXHUwMDFiWzM3bSBcdTAwMWJbMzRtZHBseXJcdTAwMWJbMzdtOjpcdTAwMWJbMzJtZmlsdGVyKClcdTAwMWJbMzdtIG1hc2tzIFx1MDAxYlszNG1zdGF0c1x1MDAxYlszN206OmZpbHRlcigpXG5cdTAwMWJbMzFt4pyWXHUwMDFiWzM3bSBcdTAwMWJbMzRtZHBseXJcdTAwMWJbMzdtOjpcdTAwMWJbMzJtbGFnKClcdTAwMWJbMzdtICAgIG1hc2tzIFx1MDAxYlszNG1zdGF0c1x1MDAxYlszN206OmxhZygpXHUwMDFiWzM5bVxuIn0= -->
-<pre><code>[37m── [1mAttaching packages[22m ──────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──[39m
-[37m[32m✔[37m [34mggplot2[37m 2.2.1     [32m✔[37m [34mpurrr  [37m 0.2.4
-[32m✔[37m [34mtibble [37m 1.3.4     [32m✔[37m [34mdplyr  [37m 0.7.4
-[32m✔[37m [34mtidyr  [37m 0.7.2     [32m✔[37m [34mstringr[37m 1.2.0
-[32m✔[37m [34mreadr  [37m 1.1.1     [32m✔[37m [34mforcats[37m 0.2.0[39m
-[37m── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-[31m✖[37m [34mdplyr[37m::[32mfilter()[37m masks [34mstats[37m::filter()
-[31m✖[37m [34mdplyr[37m::[32mlag()[37m    masks [34mstats[37m::lag()[39m</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSDigJhmdXp6eWpvaW7igJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjQuNFxuIn0= -->
+<pre><code>package ‘fuzzyjoin’ was built under R version 3.4.4</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0d2QoXCJ+L0pPRS9BcmFiaWRvcHNpcy9NQUdJQy9TTlBfQ0FMTElORy9cIilcbmBgYCJ9 -->
+<pre class="r"><code>setwd(&quot;~/JOE/Arabidopsis/MAGIC/SNP_CALLING/&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlcyA8LSBzY2FuKFwiLi4vUkFXREFUQS9zYW1wbGVzXCIsIHdoYXQgPSBcImNoYXJhY3RlclwiKVxudmNmX2ZpbGVzIDwtIGRpcihcIi4uL1NOUF9DQUxMSU5HL0hRX0NBTExTL1wiLCBwYXR0ZXJuID0gJyoudmNmJywgZnVsbC5uYW1lcyA9IFQpXG5nZmYgPC0gcmVhZC50YWJsZShcIn4vdHV0b3JpYWwvcmVmZXJlbmNlL1RBSVIxMF9HRkYzX2dlbmVzX3RyYW5zcG9zb25zLmdmZlwiLCBoZWFkZXIgPSBGKSAlPiUgXG4gIGZpbHRlcihWMyA9PSBcIm1STkFcIilcbmBgYCJ9 -->
+<pre class="r"><code>samples &lt;- scan(&quot;../RAWDATA/samples&quot;, what = &quot;character&quot;)
+vcf_files &lt;- dir(&quot;../SNP_CALLING/HQ_CALLS/&quot;, pattern = '*.vcf', full.names = T)
+gff &lt;- read.table(&quot;~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff&quot;, header = F) %&gt;% 
+  filter(V3 == &quot;mRNA&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -231,7 +233,7 @@ AT_DATA &lt;- vcf_files %&gt;%
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTUFHSUMgUGFyZW50cyBTTlAgQW5hbHlzaXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawphdXRob3I6ICJKb2UgRWR3YXJkcyIKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKYGBge3J9CnNldHdkKCJ+L0pPRS9BcmFiaWRvcHNpcy9NQUdJQy9TTlBfQ0FMTElORy8iKQpgYGAKCmBgYHtyfQpzYW1wbGVzIDwtIHNjYW4oIi4uL1JBV0RBVEEvc2FtcGxlcyIsIHdoYXQgPSAiY2hhcmFjdGVyIikKdmNmX2ZpbGVzIDwtIGRpcigiLi4vU05QX0NBTExJTkcvSFFfQ0FMTFMvIiwgcGF0dGVybiA9ICcqLnZjZicsIGZ1bGwubmFtZXMgPSBUKQpnZmYgPC0gcmVhZC50YWJsZSgifi90dXRvcmlhbC9yZWZlcmVuY2UvVEFJUjEwX0dGRjNfZ2VuZXNfdHJhbnNwb3NvbnMuZ2ZmIiwgaGVhZGVyID0gRikKYGBgCgpgYGB7cn0KdmNmX3JlYWQgPC0gZnVuY3Rpb24oZGF0YSl7CiAgZiA8LSByZWFkcjo6cmVhZF90c3YoZGF0YSwgY29tbWVudCA9ICIjIyIpICU+JSAKICAgIG11dGF0ZShTYW1wbGVJRCA9IGdzdWIoIlxcLnZjZiIsICIiLCBkYXRhKSkgJT4lIAogICAgcmVuYW1lKCJDaHIiID0gISFuYW1lcyguWzFdKSkgJT4lIAogICAgbXV0YXRlKENociA9IHBhc3RlKCJDaHIiLCBDaHIsIHNlcCA9ICIiKSkKICByZXR1cm4oZlssLTEwXSkKfQoKQVRfREFUQSA8LSB2Y2ZfZmlsZXMgJT4lIAogIG1hcCh2Y2ZfcmVhZCkgJT4lIAogIHJlZHVjZShyYmluZCkgJT4lIAogIG11dGF0ZShTYW1wbGVJRCA9IGdzdWIoIi4qUG9vbFswLTldXyIsICIiLCBTYW1wbGVJRCksIFNhbXBsZUlEID0gZ3N1YigiX2hxX2NhbGxzIiwgIiIsIFNhbXBsZUlEKSkKYGBgCgpgYGB7cn0Kc3ByZWFkX3ZjZiAKYGBgCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTUFHSUMgUGFyZW50cyBTTlAgQW5hbHlzaXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawphdXRob3I6ICJKb2UgRWR3YXJkcyIKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZnV6enlqb2luKQpgYGAKCmBgYHtyfQpzZXR3ZCgifi9KT0UvQXJhYmlkb3BzaXMvTUFHSUMvU05QX0NBTExJTkcvIikKYGBgCgpgYGB7cn0Kc2FtcGxlcyA8LSBzY2FuKCIuLi9SQVdEQVRBL3NhbXBsZXMiLCB3aGF0ID0gImNoYXJhY3RlciIpCnZjZl9maWxlcyA8LSBkaXIoIi4uL1NOUF9DQUxMSU5HL0hRX0NBTExTLyIsIHBhdHRlcm4gPSAnKi52Y2YnLCBmdWxsLm5hbWVzID0gVCkKZ2ZmIDwtIHJlYWQudGFibGUoIn4vdHV0b3JpYWwvcmVmZXJlbmNlL1RBSVIxMF9HRkYzX2dlbmVzX3RyYW5zcG9zb25zLmdmZiIsIGhlYWRlciA9IEYpICU+JSAKICBmaWx0ZXIoVjMgPT0gIm1STkEiKQpgYGAKCmBgYHtyfQp2Y2ZfcmVhZCA8LSBmdW5jdGlvbihkYXRhKXsKICBmIDwtIHJlYWRyOjpyZWFkX3RzdihkYXRhLCBjb21tZW50ID0gIiMjIikgJT4lIAogICAgbXV0YXRlKFNhbXBsZUlEID0gZ3N1YigiXFwudmNmIiwgIiIsIGRhdGEpKSAlPiUgCiAgICByZW5hbWUoIkNociIgPSAhIW5hbWVzKC5bMV0pKSAlPiUgCiAgICBtdXRhdGUoQ2hyID0gcGFzdGUoIkNociIsIENociwgc2VwID0gIiIpKQogIHJldHVybihmWywtMTBdKQp9CgpBVF9EQVRBIDwtIHZjZl9maWxlcyAlPiUgCiAgbWFwKHZjZl9yZWFkKSAlPiUgCiAgcmVkdWNlKHJiaW5kKSAlPiUgCiAgbXV0YXRlKFNhbXBsZUlEID0gZ3N1YigiLipQb29sWzAtOV1fIiwgIiIsIFNhbXBsZUlEKSwgU2FtcGxlSUQgPSBnc3ViKCJfaHFfY2FsbHMiLCAiIiwgU2FtcGxlSUQpKQpgYGAKCmBgYHtyfQpnZW5lX3NucHMgPC0gZnV6enlfbGVmdF9qb2luKEFUX0RBVEEsIGdmZiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICBieSA9IGMoIkNociIgPSAiVjEiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiUE9TIiA9ICJWNCIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJQT1MiID0gIlY1IiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbWF0Y2hfZnVuID0gbGlzdChgPT1gLCBgPj1gLCBgPD1gKSkKICAKYGBgCgo=</div>
 
 
 
