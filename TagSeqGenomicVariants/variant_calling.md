@@ -94,4 +94,20 @@ snp_to_gene.py -i "$sample"_hq_calls.vcf -g ~/tutorial/reference/TAIR10_GFF3_gen
 done;
 ```
 
+We will actually need the counts for each geneID to be able to do some of the downstream analysis. So Let's go ahead and generate the counts using HTSeq.
 
+```
+for sample in $(cat samples); \
+do echo "On sample $sample"; \
+samtools view "$sample"_sorted.bam | htseq-count - ~/tutorial/reference/Arabidopsis_thaliana.TAIR10.40.gtf.gz > "$sample"_counts.tsv; \
+done; 
+```
+
+Alternatively, if you would like to get counts from Salmon, you can do it this way on the trimmed reads.
+
+```
+for sample in $(cat samples); \
+do echo "On sample $sample"; \
+salmon quant -i ~/JOE/Arabidopsis/Reference/at_index -l A -r "$sample"_trim.fq -p 8 -o "$sample"_salmon_quant --noLengthCorrection; \
+done;
+```

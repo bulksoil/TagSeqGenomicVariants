@@ -6,7 +6,6 @@ author: "Joe Edwards"
 
 ```{r}
 library(tidyverse)
-library(fuzzyjoin)
 ```
 
 ```{r}
@@ -14,33 +13,79 @@ setwd("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/")
 ```
 
 ```{r}
-samples <- scan("../RAWDATA/samples", what = "character")
-vcf_files <- dir("../SNP_CALLING/HQ_CALLS/", pattern = '*.vcf', full.names = T)
-gff <- read.table("~/tutorial/reference/TAIR10_GFF3_genes_transposons.gff", header = F) %>% 
-  filter(V3 == "mRNA")
+samples <- scan("~/JOE/Arabidopsis/MAGIC/RAWDATA/samples", what = "character")
+vcf_files <- dir("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/HQ_CALLS_WITH_GENEID/", pattern = '*.vcf', full.names = T)
+count_files <- dir("~/JOE/Arabidopsis/MAGIC/COUNTS/", pattern = "*counts.tsv", full.names = T)
 ```
 
 ```{r}
 vcf_read <- function(data){
-  f <- readr::read_tsv(data, comment = "##") %>% 
-    mutate(SampleID = gsub("\\.vcf", "", data)) %>% 
-    rename("Chr" = !!names(.[1])) %>% 
-    mutate(Chr = paste("Chr", Chr, sep = ""))
-  return(f[,-10])
+  f <- read.table(data, header = T) %>% 
+    mutate(SampleID = gsub("\\.vcf", "", data)) %>%
+    rename(Info = !!names(.[11])) 
+  return(f)
 }
 
-AT_DATA <- vcf_files %>% 
+AT_SNPS <- vcf_files %>% 
   map(vcf_read) %>% 
   reduce(rbind) %>% 
-  mutate(SampleID = gsub(".*Pool[0-9]_", "", SampleID), SampleID = gsub("_hq_calls", "", SampleID))
+  mutate(SampleID = gsub(".*Pool[0-9]_", "", SampleID), SampleID = gsub("_calls_with_geneid", "", SampleID))
+
+AT_SNPS <- AT_SNPS %>% 
+  rename(GeneID = Gene)
 ```
 
 ```{r}
-gene_snps <- fuzzy_left_join(AT_DATA, gff,
-                             by = c("Chr" = "V1",
-                                    "POS" = "V4",
-                                    "POS" = "V5"),
-                             match_fun = list(`==`, `>=`, `<=`))
+count_read <- function(data){ 
+  f <- read_tsv(data, col_names = F, comment = "__") %>%
+    rename("GeneID" = !!names(.[1]), "Count" = !!names(.[2])) %>% 
+    mutate(SampleID = gsub("_counts\\.tsv", "", data))
+  return(f)
+}
+
+AT_COUNTS <- count_files %>% 
+  map(count_read) %>% 
+  reduce(rbind) %>% 
+  mutate(SampleID = gsub(".*Pool[0-9]_", "", SampleID))
+```
+
+
+```{r}
+AT_SNP_COUNTS <- AT_COUNTS %>% 
+  left_join(AT_SNPS, by = c("GeneID", "SampleID"))
+
+AT_SNP_COUNTS %>% 
+  filter(Count > 5) %>% 
+  mutate(snp_detected = ifelse(!is.na(ALT), "snp", "no_snp")) %>% 
+  count(GeneID, SampleID, Count, snp_detected) %>% 
+  group_by(SampleID) %>% 
+  arrange(-Count) %>% 
+  mutate(order = 1:n()) %>% 
+  ggplot(aes(order, Count, color = snp_detected)) +
+  geom_point() +
+  scale_y_log10() +
+  scale_color_manual(values = c("darkmagenta", "darkgoldenrod1")) +
+  facet_wrap(~SampleID) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
   
 ```
+
+These are rank - expression curves. The higher the rank the more highly expressed the gene is. The y-axis is the detected count each particular transcript. A gold dot represents whether a polymorphism was detected in that gene from the expression data. One takeaway here is that there are very few polymorphisms in the two Col samples - so that's great! Let's take a look at how many polymorphisms are detected in each transcriptome.
+
+```{r}
+AT_SNP_COUNTS %>% 
+  filter(Count > 5) %>% 
+  mutate(snp_detected = ifelse(!is.na(ALT), "snp", "no_snp")) %>% 
+  group_by(SampleID) %>% 
+  count(GeneID, SampleID, snp_detected) %>% 
+  mutate(GenesDetected = n()) %>% 
+  filter(snp_detected == "snp") %>% 
+  count(SampleID, GenesDetected) %>%
+  mutate(Percentage = round(nn / GenesDetected * 100, digits = 2))
+```
+
+
+
+
 

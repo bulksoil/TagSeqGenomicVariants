@@ -60,7 +60,7 @@ def vcf_read(vcf, gff, out):
 		if line.startswith('##'):
 			continue
 		if line.startswith('#'):
-			out.write("Gene\t%s" % re.sub("#", "", line))
+			out.write("GeneID\t%s" % re.sub("#", "", line))
 			continue
 		fields = line.split('\t')
 		chrom = fields[0]
