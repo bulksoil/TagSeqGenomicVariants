@@ -15,7 +15,7 @@ setwd("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/")
 ```{r}
 samples <- scan("~/JOE/Arabidopsis/MAGIC/RAWDATA/samples", what = "character")
 vcf_files <- dir("~/JOE/Arabidopsis/MAGIC/SNP_CALLING/HQ_CALLS_WITH_GENEID/", pattern = '*.vcf', full.names = T)
-count_files <- dir("~/JOE/Arabidopsis/MAGIC/COUNTS/", pattern = "*counts.tsv", full.names = T)
+count_files <- dir("~/JOE/Arabidopsis/MAGIC/TH_COUNTS/", pattern = "*counts.tsv", full.names = T)
 ```
 
 ```{r}
@@ -44,7 +44,7 @@ count_read <- function(data){
 }
 
 AT_COUNTS <- count_files %>% 
-  map(count_read) %>% 
+  map(suppressMessages(count_read)) %>% 
   reduce(rbind) %>% 
   mutate(SampleID = gsub(".*Pool[0-9]_", "", SampleID))
 ```
